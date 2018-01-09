@@ -11,7 +11,7 @@
         public static Option<R> Bind<T, R>(this Option<T> optT, Func<T, Option<R>> f)
           => optT.Match(
              None: () => None,
-             Some: (t) => f(t));
+             Some: f);
 
         public static IEnumerable<R> Bind<T, R>(this Option<T> @this, Func<T, IEnumerable<R>> func)
           => @this.AsEnumerable().SelectMany(func);
@@ -38,7 +38,7 @@
 
         public static T GetOrElse<T>(this Option<T> opt, Func<T> fallback)
          => opt.Match(
-            () => fallback(),
+            fallback,
             (t) => t);
 
         public static Option<T> OrElse<T>(this Option<T> left, Option<T> right)
@@ -48,7 +48,7 @@
 
         public static Option<T> OrElse<T>(this Option<T> left, Func<Option<T>> right)
          => left.Match(
-            () => right(),
+            right,
             (_) => left);
 
         public static Option<R> Select<T, R>(this Option<T> @this, Func<T, R> func)
